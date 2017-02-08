@@ -1,0 +1,19 @@
+select TBNAME, NAME,  CREATOR, TBCREATOR, UNIQUERULE,
+CASE UNIQUERULE 
+    WHEN 'C' THEN 'Yes and constraint'
+    WHEN 'D' THEN 'No'
+    WHEN 'U' Then 'Yes'
+    WHEN 'P' THEN 'Primary Key'
+    WHEN 'N' THEN 'Yes and Not Null'
+    WHEN 'R' THEN 'Yes and referenced key'
+    WHEN 'G' THEN 'Yes and GUID'
+    WHEN 'X' THEN 'Yes and XML'
+    ELSE '??' END as "UNIQUERULE Defined",
+    KEY.colname, KEY.*
+from SYSIBM.SYSINDEXES INDEX
+INNER JOIN sysibm.syskeys KEY 
+ON INDEX.NAME = KEY.IXNAME
+AND INDEX.CREATOR = KEY.IXCREATOR
+WHERE TBCREATOR LIKE 'INM%'
+--AND TBNAME = 'IAGR24_AGMTELMT_TB'
+ORDER BY TBNAME, INDEX.NAME
